@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,15 +27,14 @@ public class MainActivity extends AppCompatActivity {
     Button btn_choose;
     Button btn_send;
     ImageView imageView;
-
-    Button btn_save;
-    EditText ed_Server;
-
+    Button btn_settings;
     SharedPreferences sharedPreferences;
 
     String server;
 
     Uri uri;
+
+    Context context = this;
 
     final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/";
 
@@ -54,20 +54,11 @@ public class MainActivity extends AppCompatActivity {
         btn_send = findViewById(R.id.btn_send);
         imageView = findViewById(R.id.imageView);
 
-        ed_Server = findViewById(R.id.ed_server);
-        btn_save = findViewById(R.id.btn_save_server);
+        btn_settings = findViewById(R.id.btn_settings);
 
         sharedPreferences = this.getSharedPreferences("com.development.black_preacher.uploadimage", Context.MODE_PRIVATE);
         server = sharedPreferences.getString("link","");
-        //server = "http://pi3.hellhero.me/uploadTest";
-
-
-
         btn_send.setEnabled(false);
-
-        ed_Server.setText(server);
-
-
 
         int permission_write = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permission_read = ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -105,12 +96,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_save.setOnClickListener(new View.OnClickListener() {
+        btn_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String serverLink = ed_Server.getText().toString();
-                sharedPreferences.edit().putString("link",serverLink).apply();
-                server = serverLink;
+                Intent intent = new Intent(context,SettingsActivity.class);
+                startActivity(intent);
             }
         });
 

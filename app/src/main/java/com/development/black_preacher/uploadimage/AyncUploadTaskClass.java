@@ -24,6 +24,8 @@ class AyncUploadTaskClass extends AsyncTask<Void, Void, String> {
     String server;
     Context context;
 
+    int serverResponseCode;
+
     ProgressDialog progressDialog;
 
 
@@ -49,6 +51,7 @@ class AyncUploadTaskClass extends AsyncTask<Void, Void, String> {
         InputStream inputStream = null;
         int maxBufferSize = 1 * 1024 * 1024;
         int bytesAvailable = 0;
+
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
         } catch (FileNotFoundException e) {
@@ -94,7 +97,8 @@ class AyncUploadTaskClass extends AsyncTask<Void, Void, String> {
             dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
             // Responses from the server (code and message)
-            int serverResponseCode = conn.getResponseCode();
+
+            serverResponseCode = conn.getResponseCode();
 
             serverResponseMessage = conn.getResponseMessage();
 
@@ -128,7 +132,12 @@ class AyncUploadTaskClass extends AsyncTask<Void, Void, String> {
         progressDialog.dismiss();
 
         // Printing uploading success message coming from server on android app.
-        Toast.makeText(context, "Upload Complete", Toast.LENGTH_LONG).show();
+        if(serverResponseCode == 200){
+            Toast.makeText(context, "Upload Complete", Toast.LENGTH_LONG).show();
+        } else{
+            Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show();
+        }
+
 
         // Setting image as transparent after done uploading.
         //imageView.setImageResource(android.R.color.transparent);
